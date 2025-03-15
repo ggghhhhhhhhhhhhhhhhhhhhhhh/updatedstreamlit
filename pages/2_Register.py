@@ -7,21 +7,29 @@ from models import User
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
-st.title("Login to RecoverEase")
+st.title("Register for RecoverEase")
 
 username = st.text_input("Username")
+email = st.text_input("Email")
 password = st.text_input("Password", type="password")
+confirm_password = st.text_input("Confirm Password", type="password")
 
-if st.button("Login"):
-    session = SessionLocal()
-    user = session.query(User).filter_by(username=username, password=password).first()
-    if user:
-        st.session_state.logged_in = True  # Set session state to logged in
-        st.session_state.current_user = username  # Store current user information
-        st.success(f"Welcome back, {username}!")
-        st.experimental_set_query_params(page="home")  # Redirect to home page
+if st.button("Register"):
+    if password != confirm_password:
+        st.error("Passwords do not match!")
     else:
-        st.error("Invalid username or password.")
-    session.close()
+        session = SessionLocal()
+        existing_user = session.query(User).filter_by(username=username).first()
+        if existing_user:
+            st.error("Username already exists. Please choose a different username.")
+        else:
+            new_user = User(username=username, email=email, password=password)
+            session.add(new_user)
+            session.commit()
+            st.success(f"Account created successfully for {username}!")
+            st.session_state.logged_in = True  # Automatically log in after registration
+            st.session_state.current_user = username
+            st.experimental_set_query_params(page="home")  # Redirect to home page
+        session.close()
 
-st.markdown("[Don't have an account? Register here](./2_Register)")
+st.markdown("[Already have an account? Login here](./1_Login)")
