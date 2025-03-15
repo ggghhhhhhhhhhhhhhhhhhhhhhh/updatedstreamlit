@@ -10,21 +10,23 @@ if "current_user" not in st.session_state:
 # Set page configuration
 st.set_page_config(page_title="RecoverEase", layout="wide")
 
-if st.session_state.logged_in:
-    if st.sidebar.button("Logout"):
-        st.session_state.logged_in = False  # Reset login state
-        st.session_state.current_user = None
-        st.warning("You have logged out.")
-        st.experimental_set_query_params(page="login")  # Redirect to login page
-
-# Redirect based on login status
 if not st.session_state.logged_in:
+    # Redirect to login page if not logged in
     st.warning("Please log in to access the application.")
     st.markdown("[Go to Login Page](./1_Login)")
 else:
-    st.title(f"Welcome to RecoverEase, {st.session_state.current_user}")
-    st.markdown("""
-    RecoverEase helps you report and manage lost and found items easily.
-
-    Use the sidebar to navigate between pages.
-    """)
+    # Display home page for logged-in users
+    if st.sidebar.button("Logout"):
+        # Reset login state and redirect to login page upon logout
+        st.session_state.logged_in = False
+        st.session_state.current_user = None
+        st.warning("You have logged out.")
+        st.experimental_set_query_params(page="login")
+    
+    # Home page content for logged-in users
+    else:
+        st.title(f"Welcome to RecoverEase, {st.session_state.current_user}")
+        st.markdown("""
+            RecoverEase helps you report and manage lost and found items easily.
+            Use the sidebar to navigate between pages.
+        """)
