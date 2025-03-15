@@ -10,7 +10,7 @@ SessionLocal = sessionmaker(bind=engine)
 # Restrict access if not logged in
 if not st.session_state.get("logged_in", False):
     st.warning("Please log in to access this page.")
-    st.markdown("[Go to Login Page](./1_Login)")
+   
 else:
     # Admin authentication logic
     admin_username = st.text_input("Admin Username", key="admin_username")
