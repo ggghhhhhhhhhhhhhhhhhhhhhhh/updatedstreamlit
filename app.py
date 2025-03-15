@@ -20,7 +20,7 @@ if st.session_state.logged_in:
 # Redirect based on login status
 if not st.session_state.logged_in:
     st.warning("Please log in to access the application.")
-    
+    st.markdown("[Go to Login Page](./1_Login)")
 else:
     st.title(f"Welcome to RecoverEase, {st.session_state.current_user}")
     st.markdown("""
