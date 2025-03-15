@@ -26,3 +26,4 @@ class FoundItem(Base):
     finder_name = Column(String(100))
     contact_info = Column(String(100))
     item_desc = Column(String(200))
+
