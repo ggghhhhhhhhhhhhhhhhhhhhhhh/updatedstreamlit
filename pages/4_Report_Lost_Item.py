@@ -1,9 +1,11 @@
 import streamlit as st
+from models import LostItem
+import os
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from models import LostItem
 
-engine = create_engine('sqlite:///instance/recoverease.db')
+os.makedirs('instance', exist_ok=True)
+engine = create_engine('sqlite:///instance/recoverease.db', connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine)
 
 st.title("Report Lost Item")
@@ -24,7 +26,7 @@ if st.button("Submit Report"):
     )
     session.add(new_item)
     session.commit()
-    st.success(f"Lost item reported successfully for {owner_name}!")
     session.close()
+    st.success(f"Lost item reported successfully for {owner_name}!")
 
 st.markdown("[Back to Home](../app.py)")
