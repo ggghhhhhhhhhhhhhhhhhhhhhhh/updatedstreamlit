@@ -9,6 +9,7 @@ SessionLocal = sessionmaker(bind=engine)
 
 st.title("Register for RecoverEase")
 
+# Input fields for registration
 username = st.text_input("Username")
 email = st.text_input("Email")
 password = st.text_input("Password", type="password")
@@ -27,7 +28,8 @@ if st.button("Register"):
             session.add(new_user)
             session.commit()
             st.success(f"Account created successfully for {username}!")
-            st.session_state.logged_in = True  # Automatically log in after registration
+            # Automatically log in after registration
+            st.session_state.logged_in = True
             st.session_state.current_user = username
             st.experimental_set_query_params(page="home")  # Redirect to home page
         session.close()
