@@ -7,27 +7,30 @@ from models import LostItem
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
-st.title("Home - Lost Items")
-
-session = SessionLocal()
-lost_items = session.query(LostItem).all()
-
-if lost_items:
-    st.subheader("Lost Items")
-    for item in lost_items:
-        col1, col2, col3, col4, col5 = st.columns(5)
-        col1.write(item.owner_name)
-        col2.write(item.item_desc)
-        col3.write(item.last_seen_location)
-        col4.write(item.status)
-        if item.status == "Lost":
-            if col5.button(f"Mark as Found [{item.id}]"):
-                item.status = "Found"
-                session.commit()
-                st.success(f"Item ID {item.id} marked as found!")
-        else:
-            col5.write("Resolved")
+# Restrict access if not logged in
+if not st.session_state.get("logged_in", False):
+    st.warning("Please log in to access this page.")
+    st.markdown("[Go to Login Page](./1_Login)")
 else:
-    st.write("No lost items reported yet.")
+    if st.sidebar.button("Logout"):
+        st.session_state.logged_in = False  # Reset login state
+        st.experimental_rerun()
 
-session.close()
+    st.title("Home - Lost Items")
+
+    session = SessionLocal()
+    lost_items = session.query(LostItem).all()
+
+    if lost_items:
+        table_data = []
+        for item in lost_items:
+            table_data.append({
+                "Owner Name": item.owner_name,
+                "Item Description": item.item_desc,
+                "Last Seen Location": item.last_seen_location,
+                "Status": item.status,
+                "Action": f"Mark as Found [{item.id}]" if item.status == "Lost" else "Resolved"
+            })
+
+        # Display table with headers using Streamlit's dataframe rendering.
+        import pandas as pd
