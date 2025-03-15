@@ -1,5 +1,3 @@
-# models.py
-
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import declarative_base
 
@@ -24,4 +22,5 @@ class LostItem(Base):
 class FoundItem(Base):
     __tablename__='found_items'
     id=Column(Integer, primary_key=True)
-
+    finder_name=Column(String(100))
+    contact_info=Column(String(100))
