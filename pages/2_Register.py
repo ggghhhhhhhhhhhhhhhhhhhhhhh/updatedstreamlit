@@ -26,3 +26,4 @@ if st.button("Register"):
     session.close()
 
 st.markdown("[Already have an account? Login here](./1_Login)")
+
