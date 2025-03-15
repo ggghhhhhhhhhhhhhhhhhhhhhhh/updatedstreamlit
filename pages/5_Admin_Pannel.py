@@ -7,39 +7,70 @@ from models import LostItem, FoundItem
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
-st.title("Admin Panel")
+# Restrict access if not logged in or not an admin user
+if not st.session_state.get("logged_in", False):
+    st.warning("Please log in to access this page.")
+    st.markdown("[Go to Login Page](./1_Login)")
+else:
+    admin_username = st.text_input("Admin Username")
+    admin_password = st.text_input("Admin Password", type="password")
 
-admin_password_input = st.text_input("Enter Admin Password", type="password")
+    if admin_username == "admin" and admin_password == "admin":
+        session = SessionLocal()
 
-if admin_password_input == "admin":  # Replace with secure logic later.
-    session = SessionLocal()
+        # Display Lost Items Table
+        st.subheader("Lost Items Table")
+        lost_items = session.query(LostItem).all()
 
-    lost_items = session.query(LostItem).all()
-    found_items = session.query(FoundItem).all()
+        if lost_items:
+            table_data = []
+            for item in lost_items:
+                table_data.append({
+                    "Owner Name": item.owner_name,
+                    "Description": item.item_desc,
+                    "Last Seen Location": item.last_seen_location,
+                    "Status": item.status,
+                    "Action": f"Delete [{item.id}]"
+                })
 
-    if lost_items:
-        st.subheader("Lost Items")
-        for item in lost_items:
-            col1, col2, col3, col4, col5, col6 = st.columns(6)
-            col1.write(item.owner_name)
-            col2.write(item.item_desc)
-            col3.write(item.last_seen_location)
-            col4.write(item.status)
-            if col5.button(f"Delete Lost [{item.id}]"):
-                session.delete(item)
-                session.commit()
-                st.success(f"Deleted lost item ID {item.id}")
+            import pandas as pd
 
-    if found_items:
-        st.subheader("Found Items")
-        for item in found_items:
-            col1, col2, col3, col4, col5 = st.columns(5)
-            col1.write(item.finder_name)
-            col2.write(item.item_desc)
-            col3.write(item.contact_info)
-            if col4.button(f"Delete Found [{item.id}]"):
-                session.delete(item)
-                session.commit()
-                st.success(f"Deleted found item ID {item.id}.")
+            df_lost_items = pd.DataFrame(table_data)
+            st.dataframe(df_lost_items)
 
-session.close()
+            for item in lost_items:
+                if st.button(f"Delete Lost Item [{item.id}]"):
+                    session.delete(item)
+                    session.commit()
+                    st.success(f"Deleted lost item ID {item.id}")
+        else:
+            st.write("No lost items reported yet.")
+
+        # Display Found Items Table
+        st.subheader("Found Items Table")
+        found_items = session.query(FoundItem).all()
+
+        if found_items:
+            table_data_found = []
+            for item in found_items:
+                table_data_found.append({
+                    "Finder Name": item.finder_name,
+                    "Description": item.item_desc,
+                    "Contact Info": item.contact_info,
+                    "Action": f"Delete [{item.id}]"
+                })
+
+            df_found_items = pd.DataFrame(table_data_found)
+            st.dataframe(df_found_items)
+
+            for item in found_items:
+                if st.button(f"Delete Found Item [{item.id}]"):
+                    session.delete(item)
+                    session.commit()
+                    st.success(f"Deleted found item ID {item.id}")
+        else:
+            st.write("No found items reported yet.")
+
+        session.close()
+    else:
+        st.error("Invalid admin credentials. Please try again.")
