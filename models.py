@@ -11,7 +11,6 @@ class User(Base):
     username=Column(String(100), unique=True, nullable=False)
     email=Column(String(100), unique=True, nullable=False)
     password=Column(String(100), nullable=False)
-    is_admin=Column(Boolean, default=False)
 
 class LostItem(Base):
     __tablename__='lost_items'
@@ -27,7 +26,3 @@ class FoundItem(Base):
     id=Column(Integer, primary_key=True)
     finder_name=Column(String(100))
     contact_info=Column(String(100))
-    item_desc=Column(String(200))
-    found_location=Column(String(100))
-
-
