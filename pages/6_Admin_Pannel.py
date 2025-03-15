@@ -3,7 +3,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models import LostItem, FoundItem
 
-# Initialize database connection
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
