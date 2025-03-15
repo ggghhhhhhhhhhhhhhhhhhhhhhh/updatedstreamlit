@@ -7,15 +7,17 @@ from models import LostItem, FoundItem
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
-# Restrict access if not logged in or not an admin user
+# Restrict access if not logged in
 if not st.session_state.get("logged_in", False):
     st.warning("Please log in to access this page.")
     st.markdown("[Go to Login Page](./1_Login)")
 else:
-    admin_username = st.text_input("Admin Username")
-    admin_password = st.text_input("Admin Password", type="password")
+    # Admin authentication logic
+    admin_username = st.text_input("Admin Username", key="admin_username")
+    admin_password = st.text_input("Admin Password", type="password", key="admin_password")
 
     if admin_username == "admin" and admin_password == "admin":
+        st.success("Welcome, Admin!")
         session = SessionLocal()
 
         # Display Lost Items Table
