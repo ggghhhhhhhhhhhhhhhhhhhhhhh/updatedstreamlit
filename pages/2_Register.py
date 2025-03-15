@@ -7,24 +7,21 @@ from models import User
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
-st.title("Register for RecoverEase")
+st.title("Login to RecoverEase")
 
 username = st.text_input("Username")
-email = st.text_input("Email")
 password = st.text_input("Password", type="password")
 
-if st.button("Register"):
+if st.button("Login"):
     session = SessionLocal()
-    user_exists = session.query(User).filter_by(email=email).first()
-    if user_exists:
-        st.error("Email already exists.")
+    user = session.query(User).filter_by(username=username, password=password).first()
+    if user:
+        st.session_state.logged_in = True  # Set session state to logged in
+        st.session_state.current_user = username  # Store current user information
+        st.success(f"Welcome back, {username}!")
+        st.experimental_set_query_params(page="home")  # Redirect to home page
     else:
-        new_user = User(username=username, email=email, password=password)
-        session.add(new_user)
-        session.commit()
-        st.success(f"Account created successfully for {username}!")
+        st.error("Invalid username or password.")
     session.close()
 
-st.markdown("[Already have an account? Login here](./1_Login)")
-
-
+st.markdown("[Don't have an account? Register here](./2_Register)")
