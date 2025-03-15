@@ -24,4 +24,4 @@ if st.button("Login"):
         st.error("Invalid username or password.")
     session.close()
 
-st.markdown("[Don't have an account? Register here](./pages/2_Register)")
+st.markdown("[Don't have an account? Register First]")
