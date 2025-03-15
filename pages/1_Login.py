@@ -16,7 +16,9 @@ if st.button("Login"):
     session = SessionLocal()
     user = session.query(User).filter_by(username=username, password=password).first()
     if user:
+        st.session_state.logged_in = True  # Set session state to logged in
         st.success(f"Welcome back, {username}!")
+        st.experimental_rerun()  # Redirect to home page after login
     else:
         st.error("Invalid username or password.")
     session.close()
