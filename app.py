@@ -1,11 +1,21 @@
 import streamlit as st
-import sqlalchemy as sa
+import os
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import User, LostItem, FoundItem
 
-# Database setup
-DATABASE_URL = "sqlite:///instance/recoverease.db"
-engine = sa.create_engine(DATABASE_URL)
+# Database setup with error handling
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+instance_dir = os.path.join(BASE_DIR, 'instance')
+os.makedirs(instance_dir, exist_ok=True)  # Ensure 'instance' directory exists
+
+db_path = os.path.join(instance_dir, 'recoverease.db')
+
+# Verify that the database file exists or create it if necessary
+if not os.path.isfile(db_path):
+    open(db_path, 'w').close()  # Create an empty database file
+
+engine = create_engine(f'sqlite:///{db_path}', connect_args={"timeout": 30})
 SessionLocal = sessionmaker(bind=engine)
 
 # Initialize database tables if not already created
