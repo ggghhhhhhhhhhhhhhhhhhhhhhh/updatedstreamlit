@@ -1,10 +1,10 @@
 import streamlit as st
-import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 from models import User
 
-db_path = 'instance/recoverease.db'
-engine = sa.create_engine(f'sqlite:///{db_path}')
+# Initialize database connection
+engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
 st.title("Register for RecoverEase")
@@ -23,6 +23,7 @@ if st.button("Register"):
         session.add(new_user)
         session.commit()
         st.success(f"Account created successfully for {username}!")
-session.close()
+    session.close()
 
 st.markdown("[Already have an account? Login here](./1_Login)")
+
