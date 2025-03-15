@@ -1,10 +1,10 @@
 import streamlit as st
-import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 from models import LostItem, FoundItem
 
-db_path = 'instance/recoverease.db'
-engine = sa.create_engine(f'sqlite:///{db_path}')
+# Initialize database connection
+engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
 st.title("Admin Panel")
@@ -37,7 +37,7 @@ if admin_password_input == "admin":  # Replace with secure logic later.
             col1.write(item.finder_name)
             col2.write(item.item_desc)
             col3.write(item.contact_info)
-            if col4.button(f"Delete [{item.id}]"):
+            if col4.button(f"Delete Found [{item.id}]"):
                 session.delete(item)
                 session.commit()
                 st.success(f"Deleted found item ID {item.id}.")
