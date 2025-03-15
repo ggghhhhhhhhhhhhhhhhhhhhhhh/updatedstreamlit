@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models import User
 
+# Initialize database connection
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
@@ -24,6 +25,6 @@ if st.button("Register"):
         st.success(f"Account created successfully for {username}!")
     session.close()
 
-st.markdown("[Already have an account? Login here](./pages/1_Login)")
+st.markdown("[Already have an account? Login here](./1_Login)")
 
 
