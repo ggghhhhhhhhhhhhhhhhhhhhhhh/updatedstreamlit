@@ -3,7 +3,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models import User
 
-# Initialize database connection
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
@@ -16,12 +15,13 @@ if st.button("Login"):
     session = SessionLocal()
     user = session.query(User).filter_by(username=username, password=password).first()
     if user:
-        st.session_state.logged_in = True  # Set session state to logged in
-        st.session_state.current_user = username  # Store current user information
+        st.session_state.logged_in = True
+        st.session_state.current_user = username
         st.success(f"Welcome back, {username}!")
-        st.experimental_set_query_params(page="home")  # Redirect to home page
+        st.experimental_set_query_params(page="home")  # Redirect to home page after login
+        st.stop()
     else:
         st.error("Invalid username or password.")
     session.close()
 
-st.markdown("[Don't have an account? Register here](./2_Register)")
+st.markdown("[Don't have an account? Register here](./pages/2_Register)")
