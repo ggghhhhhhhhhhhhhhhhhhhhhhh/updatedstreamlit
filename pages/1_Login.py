@@ -2,11 +2,9 @@ import streamlit as st
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models import User
-import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(BASE_DIR, '../instance/recoverease.db')
-engine = sa.create_engine(f'sqlite:///{db_path}')
+# Initialize database connection
+engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
 st.title("Login to RecoverEase")
