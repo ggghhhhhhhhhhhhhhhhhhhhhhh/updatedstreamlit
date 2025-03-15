@@ -1,4 +1,3 @@
-# app.py (Main entrypoint)
 import streamlit as st
 
 st.set_page_config(page_title="RecoverEase", layout="wide")
@@ -9,3 +8,4 @@ RecoverEase helps you report and manage lost and found items easily.
 
 Use the sidebar to navigate between pages.
 """)
+
