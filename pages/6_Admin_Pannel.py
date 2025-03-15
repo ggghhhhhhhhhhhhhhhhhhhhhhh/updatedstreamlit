@@ -7,12 +7,9 @@ from models import LostItem, FoundItem
 engine = create_engine('sqlite:///instance/recoverease.db')
 SessionLocal = sessionmaker(bind=engine)
 
-# Restrict access if not logged in
 if not st.session_state.get("logged_in", False):
     st.warning("Please log in to access this page.")
-   
 else:
-    # Admin authentication logic
     admin_username = st.text_input("Admin Username", key="admin_username")
     admin_password = st.text_input("Admin Password", type="password", key="admin_password")
 
@@ -23,20 +20,12 @@ else:
         # Display Lost Items Table
         st.subheader("Lost Items Table")
         lost_items = session.query(LostItem).all()
-
         if lost_items:
-            table_data = []
-            for item in lost_items:
-                table_data.append({
-                    "Owner Name": item.owner_name,
-                    "Description": item.item_desc,
-                    "Last Seen Location": item.last_seen_location,
-                    "Status": item.status,
-                    "Action": f"Delete [{item.id}]"
-                })
-
+            table_data = [{"Owner Name": item.owner_name,
+                           "Description": item.item_desc,
+                           "Last Seen Location": item.last_seen_location,
+                           "Status": item.status} for item in lost_items]
             import pandas as pd
-
             df_lost_items = pd.DataFrame(table_data)
             st.dataframe(df_lost_items)
 
@@ -51,17 +40,9 @@ else:
         # Display Found Items Table
         st.subheader("Found Items Table")
         found_items = session.query(FoundItem).all()
-
         if found_items:
-            table_data_found = []
-            for item in found_items:
-                table_data_found.append({
-                    "Finder Name": item.finder_name,
-                    "Description": item.item_desc,
-                    "Contact Info": item.contact_info,
-                    "Action": f"Delete [{item.id}]"
-                })
-
+            table_data_found = [{"Finder Name": item.finder_name,
+                                 "Contact Info": item.contact_info} for item in found_items]
             df_found_items = pd.DataFrame(table_data_found)
             st.dataframe(df_found_items)
 
